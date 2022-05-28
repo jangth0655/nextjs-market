@@ -1,16 +1,24 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-shape-divider-bottom-1653634769 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: rotate(180deg);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.custom-shape-divider-bottom-1653634769 svg {
+  position: relative;
+  display: block;
+  width: calc(138% + 1.3px);
+  height: 344px;
 }
 
-* {
-  box-sizing: border-box;
+.custom-shape-divider-bottom-1653634769 .shape-fill {
+  fill: #ffffff;
 }
