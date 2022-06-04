@@ -6,6 +6,11 @@ import Input from "@components/auth/Input";
 import { cls } from "@libs/client/cls";
 import useMutation from "@libs/client/mutation";
 import enterImage from "../public/auth/enter.jpg";
+import { useRouter } from "next/router";
+import { Token } from "@prisma/client";
+import Button from "@components/auth/Button";
+import TokenConfirm from "@components/auth/TokenConfirm";
+import Error from "@components/Error";
 
 type RegisterMethod = "login" | "signup";
 
@@ -17,17 +22,34 @@ interface EnterForm {
 interface EnterMutation {
   ok: boolean;
   error?: string;
+  token: string;
+}
+
+interface LoginMutation {
+  ok: boolean;
+  error?: string;
+  token: Token;
 }
 
 const Enter: NextPage = () => {
-  const { register, handleSubmit, reset } = useForm<EnterForm>({
+  const router = useRouter();
+  const [okToken, setOkToken] = useState(false);
+  const [method, setMethod] = useState<RegisterMethod>("login");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<EnterForm>({
     mode: "onChange",
   });
 
+  console.log(errors);
+
   const [enter, { data: enterData, loading: enterLoading, error: enterError }] =
     useMutation<EnterMutation>("/api/users/enter");
-  const [login, { loading: loginLoading, error: loginError }] =
-    useMutation("/api/users/login");
+  const [login, { data: loginData, loading: loginLoading, error: loginError }] =
+    useMutation<LoginMutation>("/api/users/login");
 
   const onValid = (data: EnterForm) => {
     if (enterLoading || loginLoading) return;
@@ -44,12 +66,16 @@ const Enter: NextPage = () => {
   };
 
   useEffect(() => {
-    if (enterData && enterData?.ok) {
-      setMethod("login");
+    if (enterData && enterData.ok) {
+      setOkToken(true);
     }
-  }, [enterData]);
+    if (loginData && loginData.ok) {
+      router.push("/");
+    }
+  }, [router, loginData, enterData]);
 
-  const [method, setMethod] = useState<RegisterMethod>("signup");
+  const submitLoading = enterLoading || loginLoading;
+
   return (
     <section className="relative flex min-h-screen items-center justify-center px-4">
       <div className="absolute -z-40 h-full w-full bg-black opacity-40"></div>
@@ -61,6 +87,9 @@ const Enter: NextPage = () => {
         className="-z-50"
       />
       <main className="relative  h-[320px] w-full max-w-lg">
+        {enterData && enterData.token && okToken && (
+          <TokenConfirm toggleToken={setOkToken} payload={enterData?.token} />
+        )}
         <div className="absolute -z-10 h-full w-full rounded-md  bg-black  opacity-50"></div>
         <form
           onSubmit={handleSubmit(onValid)}
@@ -92,42 +121,63 @@ const Enter: NextPage = () => {
             </span>
           </div>
 
-          <div className="w-[80%] overflow-hidden rounded-md bg-white">
-            {method === "signup" && (
-              <>
+          {method === "signup" && (
+            <>
+              <div className="w-[80%] overflow-hidden rounded-md ">
                 <Input
                   placeholder="Email"
                   htmlFor="email"
                   id="email"
                   icon="email"
-                  register={register("email", { required: true })}
+                  register={register("email", {
+                    required: "Email is required.",
+                  })}
+                  hasError={Boolean(errors.email)}
                 />
                 <Input
                   placeholder="Username"
                   icon="username"
                   htmlFor="username"
                   id="username"
-                  register={register("username", { required: true })}
+                  register={register("username", {
+                    required: "username is required.",
+                  })}
+                  hasError={Boolean(errors.username)}
                 />
-              </>
-            )}
-            {method === "login" && (
-              <Input
-                placeholder="Username"
-                icon="username"
-                htmlFor="username"
-                id="username"
-                register={register("username", { required: true })}
+              </div>
+              <Button
+                loading={submitLoading}
+                SubmitName="Register"
+                disabled={!isValid}
               />
-            )}
-          </div>
+            </>
+          )}
 
-          <button className="w-[80%] rounded-md  bg-blue-600 p-2 uppercase">
-            {enterLoading || loginLoading ? "loading" : "Start"}
-          </button>
-          {enterError}
-          {/* error message */}
-          <div></div>
+          {method === "login" && (
+            <>
+              <div className="w-[80%] overflow-hidden rounded-md ">
+                <Input
+                  placeholder="Username"
+                  icon="username"
+                  htmlFor="username"
+                  id="username"
+                  register={register("username", {
+                    required: "username is required.",
+                  })}
+                />
+              </div>
+              <Button
+                loading={submitLoading}
+                SubmitName="Login"
+                disabled={!isValid}
+              />
+            </>
+          )}
+          {errors.email?.message && <Error error={errors.email?.message} />}
+          {errors.username?.message && (
+            <Error error={errors.username.message} />
+          )}
+          {method === "login" && loginError && <Error error={loginError} />}
         </form>
       </main>
     </section>

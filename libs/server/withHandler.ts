@@ -27,12 +27,15 @@ const withHandler = ({ handler, method, isPrivate = true }: ConfigType) => {
       if (req.method && !method.includes(req.method as Method)) {
         return res
           .status(405)
-          .json({ ok: false, error: "Request Method is incorrect" });
+          .json({ ok: false, error: "Request Method is incorrect." });
+      }
+      if (!req.session.user?.id && isPrivate) {
+        return res.status(401).json({ ok: false, error: "Please Login." });
       }
       return await handler(req, res);
     } catch (e) {
       console.warn(e);
-      return res.status(500).json({ ok: false, error: "Server not working" });
+      return res.status(500).json({ ok: false, error: "Server not working." });
     }
   };
 };

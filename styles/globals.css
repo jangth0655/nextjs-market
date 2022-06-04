@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+  line-height: 150%;
+}
+
 .custom-shape-divider-bottom-1653634769 {
   position: absolute;
   bottom: 0;

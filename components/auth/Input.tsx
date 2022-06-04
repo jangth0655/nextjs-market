@@ -1,16 +1,25 @@
+import { cls } from "@libs/client/cls";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 interface InputProps {
   htmlFor?: string;
-  id?: string;
+  id?: "email" | "username" | "confirm";
   placeholder: string;
-  icon: "email" | "username";
+  icon: "email" | "username" | "confirm";
   register?: UseFormRegisterReturn;
+  hasError?: boolean;
 }
 
-const Input = ({ htmlFor, id, placeholder, icon, register }: InputProps) => {
+const Input = ({
+  htmlFor,
+  id,
+  placeholder,
+  icon,
+  register,
+  hasError,
+}: InputProps) => {
   return (
-    <div className="flex border-b-[1px]">
+    <div className="flex border-b-[1px] bg-white">
       <label
         htmlFor={htmlFor}
         className="flex w-[20%]  items-center justify-center  border-r-[1px] font-bold"
@@ -18,7 +27,10 @@ const Input = ({ htmlFor, id, placeholder, icon, register }: InputProps) => {
         {icon === "email" && (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 text-gray-500"
+            className={cls(
+              "h-5 w-5 ",
+              hasError ? "text-red-500" : "text-gray-500"
+            )}
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -27,10 +39,31 @@ const Input = ({ htmlFor, id, placeholder, icon, register }: InputProps) => {
           </svg>
         )}
 
+        {icon === "confirm" && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={cls(
+              "h-5 w-5 ",
+              hasError ? "text-red-500" : "text-gray-500"
+            )}
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fillRule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clipRule="evenodd"
+            />
+          </svg>
+        )}
+
         {icon === "username" && (
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 text-gray-500"
+            className={cls(
+              "h-5 w-5 ",
+              hasError ? "text-red-500" : "text-gray-500"
+            )}
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -46,7 +79,9 @@ const Input = ({ htmlFor, id, placeholder, icon, register }: InputProps) => {
         id={id}
         placeholder={placeholder}
         {...register}
-        className="w-full bg-white p-2 text-sm text-gray-700 outline-none placeholder:text-sm"
+        className={cls(
+          "w-full bg-white p-2 text-sm text-gray-700 outline-none placeholder:text-sm"
+        )}
       />
     </div>
   );

@@ -8,7 +8,7 @@ interface MutationState<T> {
 
 type MutationResponse<T> = [(data?: any) => void, MutationState<T>];
 
-const useMutation = <T>(url: string): MutationResponse<T> => {
+const useMutation = <T = any>(url: string): MutationResponse<T> => {
   const [value, setValue] = useState<MutationState<T>>({
     loading: false,
     data: undefined,
