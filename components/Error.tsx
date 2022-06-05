@@ -4,7 +4,7 @@ interface ErrorString {
 
 const Error = ({ error }: ErrorString) => {
   return (
-    <div className="flex items-center justify-center p-2">
+    <div className="white flex items-center justify-center p-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="mr-2 h-5 w-5 text-yellow-400"

@@ -10,6 +10,7 @@ const handler = async (
   res: NextApiResponse<ResponseType>
 ) => {
   const { email, username } = req.body;
+
   const payload = Math.floor(100000 + Math.random() * 900000) + "";
   const user = await client.user.findFirst({
     where: {
@@ -26,6 +27,7 @@ const handler = async (
       id: true,
     },
   });
+
   if (user) {
     return res.send({ ok: false, error: "Username or email already taken" });
   }
@@ -45,7 +47,7 @@ const handler = async (
       },
     },
   });
-  return res.status(201).json({ ok: true, token });
+  return res.status(201).json({ ok: true, token: token.payload });
 
   /*  if (email) {
     const email = await mail.send({

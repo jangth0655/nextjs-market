@@ -17,6 +17,7 @@ type RegisterMethod = "login" | "signup";
 interface EnterForm {
   email?: string;
   username: string;
+  error?: string;
 }
 
 interface EnterMutation {
@@ -39,12 +40,12 @@ const Enter: NextPage = () => {
     register,
     handleSubmit,
     reset,
+    setError,
+    clearErrors,
     formState: { errors, isValid },
   } = useForm<EnterForm>({
     mode: "onChange",
   });
-
-  console.log(errors);
 
   const [enter, { data: enterData, loading: enterLoading, error: enterError }] =
     useMutation<EnterMutation>("/api/users/enter");
@@ -64,6 +65,16 @@ const Enter: NextPage = () => {
       return;
     }
   };
+
+  useEffect(() => {
+    if (enterError) {
+      setError("error", { message: enterError });
+    }
+    if (loginError) {
+      setError("error", { message: loginError });
+    }
+    console.log(errors.error?.message);
+  }, [enterError, loginError]);
 
   useEffect(() => {
     if (enterData && enterData.ok) {
@@ -86,7 +97,7 @@ const Enter: NextPage = () => {
         objectFit="cover"
         className="-z-50"
       />
-      <main className="relative  h-[320px] w-full max-w-lg">
+      <main className="relative  h-[320px] w-full max-w-lg ">
         {enterData && enterData.token && okToken && (
           <TokenConfirm toggleToken={setOkToken} payload={enterData?.token} />
         )}
@@ -173,11 +184,13 @@ const Enter: NextPage = () => {
               />
             </>
           )}
-          {errors.email?.message && <Error error={errors.email?.message} />}
-          {errors.username?.message && (
-            <Error error={errors.username.message} />
-          )}
-          {method === "login" && loginError && <Error error={loginError} />}
+          <div className="">
+            {errors.email?.message && <Error error={errors.email?.message} />}
+            {errors.username?.message && (
+              <Error error={errors.username.message} />
+            )}
+            {errors.error?.message && <Error error={errors.error?.message} />}
+          </div>
         </form>
       </main>
     </section>

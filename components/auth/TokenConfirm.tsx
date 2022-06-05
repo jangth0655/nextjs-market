@@ -1,6 +1,5 @@
 import useMutation from "@libs/client/mutation";
 import { useRouter } from "next/router";
-import Enter from "pages/enter";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "./Button";
@@ -46,7 +45,7 @@ const TokenConfirm = ({ payload, toggleToken }: TokenConfirmProps) => {
   }, [router, confirmData, toggleToken]);
 
   return (
-    <div className="absolute flex h-full  w-full flex-col items-center justify-center overflow-hidden rounded-md bg-gray-900 text-white">
+    <div className="absolute z-50 flex h-full  w-full flex-col items-center justify-center overflow-hidden rounded-md bg-gray-900 text-white">
       <div className="flex w-full justify-end pr-3 pt-2">
         <svg
           onClick={() => toggleToken(false)}
