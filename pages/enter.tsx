@@ -73,7 +73,6 @@ const Enter: NextPage = () => {
     if (loginError) {
       setError("error", { message: loginError });
     }
-    console.log(errors.error?.message);
   }, [enterError, loginError]);
 
   useEffect(() => {
