@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import client from "@libs/server/client";
+import { withApiSession } from "@libs/server/withSession";
 
 const handler = async (
   req: NextApiRequest,
@@ -20,11 +21,18 @@ const handler = async (
       error: "Username is incorrect or already taken.",
     });
   }
-  return res.send({ ok: true });
+
+  req.session.user = {
+    id: existUser.id,
+  };
+  await req.session.save();
+  return res.status(200).json({ ok: true });
 };
 
-export default withHandler({
-  method: ["POST"],
-  handler,
-  isPrivate: false,
-});
+export default withApiSession(
+  withHandler({
+    method: ["POST"],
+    handler,
+    isPrivate: false,
+  })
+);

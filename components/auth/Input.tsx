@@ -5,7 +5,7 @@ interface InputProps {
   htmlFor?: string;
   id?: "email" | "username" | "confirm";
   placeholder: string;
-  icon: "email" | "username" | "confirm";
+  icon?: "email" | "username" | "confirm";
   register?: UseFormRegisterReturn;
   hasError?: boolean;
 }

@@ -15,7 +15,7 @@ type Handler = (
 type ConfigType = {
   method: Method[];
   handler: Handler;
-  isPrivate: boolean;
+  isPrivate?: boolean;
 };
 
 const withHandler = ({ handler, method, isPrivate = true }: ConfigType) => {
