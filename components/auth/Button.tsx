@@ -3,7 +3,7 @@ import { cls } from "@libs/client/cls";
 interface ButtonProps {
   loading: boolean;
   SubmitName: "Register" | "Confirm" | "Login";
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const Button = ({ loading, SubmitName, disabled }: ButtonProps) => {

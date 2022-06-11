@@ -25,7 +25,7 @@ const onNavigate = (navItem: string, router: NextRouter) => {
       router.push("/streams");
       break;
     case "Profile":
-      router.push("/profile");
+      router.push("/profiles");
       break;
   }
 };

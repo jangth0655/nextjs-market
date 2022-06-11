@@ -1,5 +1,7 @@
 import Layout from "@components/layout";
 import ShareButton from "@components/Share/ShareButton";
+import { cls } from "@libs/client/cls";
+import useMutation from "@libs/client/mutation";
 import { Product, User } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,14 +15,23 @@ interface ItemDetailProps {
   ok: boolean;
   product: UserWithProduct;
   relatedProducts: Product;
+  isLiked: boolean;
 }
 
 const ItemDetail = () => {
   const router = useRouter();
 
-  const { data, error } = useSWR<ItemDetailProps>(
+  const { data, error, mutate } = useSWR<ItemDetailProps>(
     router.query.id && `/api/products/${router.query.id}`
   );
+  const [fav, { loading, data: favData }] = useMutation(
+    router.query.id ? `/api/products/${router.query.id}/favs` : ""
+  );
+
+  const onFav = () => {
+    fav({});
+    mutate((data) => data && { ...data, isLiked: !data.isLiked }, false);
+  };
 
   return (
     <Layout back={true} showing={false}>
@@ -49,24 +60,29 @@ const ItemDetail = () => {
           <span>price</span>
         </div>
         <p className="text-sm">{data?.product.description}</p>
+
         <div className="flex">
           <ShareButton text="Talk to seller" />
-          <div className="flex w-[10%] items-center justify-center">
+          <button
+            onClick={() => onFav()}
+            className={cls(
+              "flex w-[10%] items-center justify-center hover:scale-110",
+              data?.isLiked ? "text-red-500" : "text-gray-300"
+            )}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth="2"
+              className="h-6 w-6 cursor-pointer"
+              viewBox="0 0 20 20"
+              fill="currentColor"
             >
               <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                fillRule="evenodd"
+                d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                clipRule="evenodd"
               />
             </svg>
-          </div>
+          </button>
         </div>
       </div>
     </Layout>

@@ -74,11 +74,7 @@ const TokenConfirm = ({ payload, toggleToken }: TokenConfirmProps) => {
             htmlFor=""
           />
         </div>
-        <Button
-          SubmitName="Confirm"
-          loading={confirmLoading}
-          disabled={!isValid}
-        />
+        <Button SubmitName="Confirm" loading={confirmLoading} />
       </form>
       <span>{payload}</span>
     </div>

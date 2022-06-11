@@ -8,9 +8,10 @@ const handler = async (
   res: NextApiResponse<ResponseType>
 ) => {
   const { body: token } = req;
+
   const foundToken = await client.token.findUnique({
     where: {
-      payload: token,
+      payload: req.body.token,
     },
     select: {
       id: true,

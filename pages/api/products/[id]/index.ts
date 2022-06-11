@@ -10,6 +10,7 @@ const handler = async (
   try {
     const {
       query: { id },
+      session: { user },
     } = req;
 
     const product = await client.product.findUnique({
@@ -22,6 +23,11 @@ const handler = async (
             avatar: true,
             id: true,
             username: true,
+          },
+        },
+        _count: {
+          select: {
+            favs: true,
           },
         },
       },
@@ -45,7 +51,22 @@ const handler = async (
         },
       },
     });
-    return res.status(200).json({ ok: true, product, relatedProducts });
+
+    const isLiked = Boolean(
+      await client.fav.findFirst({
+        where: {
+          productId: product.id,
+          userId: user?.id,
+        },
+        select: {
+          id: true,
+        },
+      })
+    );
+
+    return res
+      .status(200)
+      .json({ ok: true, product, relatedProducts, isLiked });
   } catch (e) {
     console.log(e);
     res.status(500).json({ ok: false, error: `${e}` });
