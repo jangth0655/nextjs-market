@@ -8,44 +8,35 @@ const handler = async (
   res: NextApiResponse<ResponseType>
 ) => {
   try {
+    const {
+      body: { question },
+      session: { user },
+    } = req;
     if (req.method === "GET") {
-      const products = await client.product.findMany({
+      const posts = await client.post.findMany({
         include: {
           user: {
             select: {
               id: true,
-              username: true,
               avatar: true,
+              username: true,
             },
           },
           _count: {
             select: {
-              favs: true,
+              answer: true,
+              wonderings: true,
             },
           },
         },
       });
-      if (!products) {
-        return res
-          .status(404)
-          .json({ ok: false, error: "Could not found product." });
-      }
-      return res.json({
-        ok: true,
-        products,
-      });
+      return res.status(200).json({ ok: true, posts });
     }
+
     if (req.method === "POST") {
-      const {
-        body: { name, price, description },
-        session: { user },
-      } = req;
-      const product = await client.product.create({
+      const post = await client.post.create({
         data: {
-          name,
-          price: +price,
-          description,
-          image: "",
+          question,
           user: {
             connect: {
               id: user?.id,
@@ -53,11 +44,7 @@ const handler = async (
           },
         },
       });
-
-      if (!product) {
-        return res.status(401).json({ ok: false, error: "Could not upload." });
-      }
-      return res.status(201).json({ ok: true, product });
+      return res.status(201).json({ ok: true, post });
     }
   } catch (e) {
     console.log(e);
