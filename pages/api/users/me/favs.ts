@@ -8,6 +8,26 @@ const handler = async (
   res: NextApiResponse<ResponseType>
 ) => {
   try {
+    const {
+      session: { user },
+    } = req;
+
+    const favs = await client.fav.findMany({
+      where: {
+        userId: user?.id,
+      },
+      include: {
+        product: {
+          select: {
+            id: true,
+            image: true,
+            name: true,
+            price: true,
+          },
+        },
+      },
+    });
+    return res.status(200).json({ ok: true, favs });
   } catch (e) {
     console.log(e);
     res.status(500).json({ ok: false, error: `${e}` });
