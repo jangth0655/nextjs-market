@@ -30,6 +30,7 @@ const handler = async (
           .status(404)
           .json({ ok: false, error: "Could not found product." });
       }
+
       return res.json({
         ok: true,
         products,

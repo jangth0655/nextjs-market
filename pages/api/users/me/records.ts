@@ -13,15 +13,6 @@ const handler = async (
       query: { kind },
     } = req;
 
-    const selectProduct = {
-      select: {
-        id: true,
-        image: true,
-        name: true,
-        price: true,
-      },
-    };
-
     if (kind === "sale") {
       const sales = await client.record.findMany({
         where: {
@@ -29,7 +20,15 @@ const handler = async (
           kind: "Sale",
         },
         include: {
-          product: { ...selectProduct },
+          product: {
+            include: {
+              _count: {
+                select: {
+                  favs: true,
+                },
+              },
+            },
+          },
         },
       });
       if (!sales) {
@@ -45,7 +44,15 @@ const handler = async (
           kind: "Purchase",
         },
         include: {
-          product: { ...selectProduct },
+          product: {
+            include: {
+              _count: {
+                select: {
+                  favs: true,
+                },
+              },
+            },
+          },
         },
       });
       if (!purchases) {

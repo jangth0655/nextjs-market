@@ -24,6 +24,7 @@ const ItemDetail = () => {
   const { data, error, mutate } = useSWR<ItemDetailProps>(
     router.query.id && `/api/products/${router.query.id}`
   );
+
   const [fav, { loading, data: favData }] = useMutation(
     router.query.id ? `/api/products/${router.query.id}/favs` : ""
   );
@@ -42,8 +43,8 @@ const ItemDetail = () => {
       <div className="flex items-center text-gray-600">
         <div className=" mr-2 h-6 w-6 rounded-full bg-slate-700"></div>
         <div className="text-xm flex flex-col">
-          <span>{data?.product.user.username}</span>
-          <Link href={`/users/profiles/${data?.product.userId}`}>
+          <span>{data?.product?.user?.username}</span>
+          <Link href={`/users/profiles/${data?.product?.userId}`}>
             <a className="cursor-pointer text-gray-500 transition-all hover:text-blue-500">
               View profile &rarr;
             </a>
@@ -54,12 +55,12 @@ const ItemDetail = () => {
       <div className="my-7 h-[0.5px] w-full bg-gray-200"></div>
 
       <div className="space-y-6">
-        <span className="text-xl font-bold">{data?.product.name}</span>
+        <span className="text-xl font-bold">{data?.product?.name}</span>
         <div>
           <span>$</span>
           <span>price</span>
         </div>
-        <p className="text-sm">{data?.product.description}</p>
+        <p className="text-sm">{data?.product?.description}</p>
 
         <div className="flex">
           <ShareButton text="Talk to seller" />

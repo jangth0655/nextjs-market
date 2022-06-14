@@ -20,6 +20,7 @@ const handler = async (
         id: true,
       },
     });
+
     if (!existProduct) {
       return res
         .status(402)
@@ -37,6 +38,7 @@ const handler = async (
           id: alreadyExists.id,
         },
       });
+      return res.status(201).json({ ok: true });
     } else {
       await client.fav.create({
         data: {
@@ -52,6 +54,7 @@ const handler = async (
           },
         },
       });
+      return res.status(201).json({ ok: true });
     }
   } catch (e) {
     console.log(e);
