@@ -20,6 +20,7 @@ const handler = async (
           username: true,
           id: true,
           avatar: true,
+          email: true,
         },
       });
       if (!existUser) {
@@ -28,6 +29,53 @@ const handler = async (
           .json({ ok: false, error: "Could not found User." });
       }
       return res.status(200).json({ ok: true, profile: existUser });
+    }
+    if (req.method === "POST") {
+      const {
+        session: { user },
+        body: { email, username },
+      } = req;
+
+      const currentUser = await client.user.findUnique({
+        where: {
+          id: user?.id,
+        },
+        select: {
+          username: true,
+          email: true,
+        },
+      });
+
+      if (email && email !== currentUser?.email) {
+        if (email === currentUser?.email) {
+          return res.json({ ok: false, error: "Email is already taken." });
+        }
+        await client.user.update({
+          where: {
+            id: user?.id,
+          },
+          data: {
+            email,
+          },
+        });
+        return res.status(201).json({ ok: true });
+      }
+
+      if (username && username !== currentUser?.username) {
+        if (username === currentUser?.username) {
+          return res.json({ ok: false, error: "Username is already taken." });
+        }
+        await client.user.update({
+          where: {
+            id: user?.id,
+          },
+          data: {
+            username,
+          },
+        });
+        return res.status(201).json({ ok: true });
+      }
+      return res.json({ ok: false });
     }
   } catch (e) {
     console.log(e);

@@ -3,6 +3,7 @@ import { cls } from "@libs/client/cls";
 import useUser from "@libs/client/useUser";
 import { Review, User } from "@prisma/client";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import useSWR from "swr";
 
@@ -16,8 +17,13 @@ interface ReviewsResponse {
 }
 
 const Profile: React.FC = () => {
+  const router = useRouter();
   const { user } = useUser();
   const { data } = useSWR<ReviewsResponse>("/api/reviews");
+
+  const onEdit = () => {
+    router.push(`/users/${user?.id}/edit/`);
+  };
 
   return (
     <Layout back={true} title={`${user?.username}' Profile`}>
@@ -27,7 +33,12 @@ const Profile: React.FC = () => {
             <div className="mr-2 h-14 w-14 rounded-full bg-slate-500"></div>
             <div className="flex flex-col">
               <span>{user?.username}</span>
-              <span>Edit Profile &rarr;</span>
+              <span
+                onClick={() => onEdit()}
+                className="cursor-pointer text-sm font-bold text-gray-400 transition-all hover:text-gray-800"
+              >
+                Edit Profile &rarr;
+              </span>
             </div>
           </div>
         </div>

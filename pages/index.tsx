@@ -18,7 +18,7 @@ const Home: NextPage = () => {
 
   return (
     <Layout title="Home" home={false}>
-      {data?.products.map((item) => (
+      {data?.products?.map((item) => (
         <React.Fragment key={item.id}>
           <ProductItem {...item} />
         </React.Fragment>
