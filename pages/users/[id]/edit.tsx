@@ -12,6 +12,7 @@ interface EditForm {
   username: string;
   email: string;
   error?: string;
+  avatar: FileList;
 }
 
 interface EditMutation {
@@ -28,10 +29,12 @@ const Edit: React.FC = () => {
     setValue,
     setError,
     formState: { errors },
+    watch,
   } = useForm<EditForm>();
   const [edit, { data, loading }] = useMutation<EditMutation>(`/api/users/me`);
 
-  const onValid = ({ email, username }: EditForm) => {
+  const onValid = ({ email, username, avatar }: EditForm) => {
+    return;
     if (loading) return;
     if (email === "" && username === "") {
       setError("error", { message: "email or username is required." });
@@ -39,7 +42,8 @@ const Edit: React.FC = () => {
     edit({ email, username });
   };
 
-  console.log(data);
+  const image = watch("avatar");
+  console.log(image[0]);
 
   useEffect(() => {
     if (data && !data.ok) {
@@ -60,7 +64,19 @@ const Edit: React.FC = () => {
     <Layout back={true} title="Edit Profile">
       <div className="mt-10">
         <div className="flex items-center">
-          <div className="mr-2 h-14 w-14 rounded-full bg-slate-500"></div>
+          <label
+            htmlFor="avatar"
+            className="mr-2 h-20 w-20 cursor-pointer rounded-full bg-slate-500"
+          >
+            <input
+              {...register("avatar")}
+              id="avatar"
+              type="file"
+              accept="image/*"
+              className="hidden"
+            />
+          </label>
+
           <div className="flex flex-col">
             <span>{user?.username}</span>
           </div>

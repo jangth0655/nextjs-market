@@ -44,7 +44,7 @@ const ItemDetail = () => {
         <div className=" mr-2 h-6 w-6 rounded-full bg-slate-700"></div>
         <div className="text-xm flex flex-col">
           <span>{data?.product?.user?.username}</span>
-          <Link href={`/users/profiles/${data?.product?.userId}`}>
+          <Link href={`/users/${data?.product?.userId}/profile`}>
             <a className="cursor-pointer text-gray-500 transition-all hover:text-blue-500">
               View profile &rarr;
             </a>

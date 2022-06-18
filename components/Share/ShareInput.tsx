@@ -7,7 +7,7 @@ interface ShareInputProps {
   hasError?: boolean;
   type?: string;
   id?: string;
-  placeholder: string;
+  placeholder?: string;
   addStyle?: string;
   kind?: "text" | "number";
 }
