@@ -1,4 +1,6 @@
+import deliveryFile from "@libs/client/deliveryFile";
 import { User } from "@prisma/client";
+import Image from "next/image";
 import { useRouter } from "next/router";
 
 interface ProductItemProps {
@@ -31,8 +33,17 @@ const ProductItem: React.FC<ProductItemProps> = ({
   };
   return (
     <div className="mb-6 flex h-80 text-gray-700 shadow-md">
-      <div className=" w-[50%] ">
-        <div className="h-full w-full bg-slate-600"></div>
+      <div className="relative -z-50 h-full w-[50%] ">
+        {image ? (
+          <Image
+            src={deliveryFile(image)}
+            layout="fill"
+            objectFit="cover"
+            alt="image"
+          />
+        ) : (
+          <div className="h-full w-full bg-slate-600"></div>
+        )}
       </div>
 
       <div className="flex w-[50%]  cursor-pointer flex-col  justify-between p-2 py-4 text-sm">

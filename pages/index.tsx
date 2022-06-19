@@ -3,9 +3,10 @@ import ProductItem from "@components/Share/ProductItem";
 import UploadButton from "@components/Share/UploadButton";
 import { Product } from "@prisma/client";
 import type { NextPage } from "next";
-import { useRouter } from "next/router";
+import Image from "next/image";
 import React from "react";
 import useSWR from "swr";
+import road from "public/localImage/road.jpg";
 
 interface ProductsItems {
   ok: boolean;
@@ -24,6 +25,15 @@ const Home: NextPage = () => {
         </React.Fragment>
       ))}
 
+      <div className="relative h-40 w-40">
+        <Image
+          src={road}
+          layout="fill"
+          objectFit="cover"
+          alt="test"
+          quality={2}
+        />
+      </div>
       <UploadButton pageText="product" />
     </Layout>
   );

@@ -1,10 +1,14 @@
 import Layout from "@components/layout";
 import ShareButton from "@components/Share/ShareButton";
 import { cls } from "@libs/client/cls";
+import deliveryFile from "@libs/client/deliveryFile";
 import useMutation from "@libs/client/mutation";
 import { Product, User } from "@prisma/client";
+import { imageOptimizer } from "next/dist/server/image-optimizer";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import useSWR from "swr";
 
 interface UserWithProduct extends Product {
@@ -36,8 +40,17 @@ const ItemDetail = () => {
 
   return (
     <Layout back={true} showing={false}>
-      <div className="mb-4 h-96 w-full rounded-md bg-slate-700">
-        <div></div>
+      <div className="relative mb-4 h-96 w-full rounded-md bg-slate-700">
+        {data?.product.image ? (
+          <Image
+            src={deliveryFile(data?.product.image)}
+            layout="fill"
+            objectFit="cover"
+            alt="product"
+          />
+        ) : (
+          <div className="relative mb-4 h-96 w-full rounded-md bg-slate-500"></div>
+        )}
       </div>
 
       <div className="flex items-center text-gray-600">
