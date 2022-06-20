@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Input from "@components/auth/Input";
 import { cls } from "@libs/client/cls";
@@ -11,6 +11,13 @@ import { Token } from "@prisma/client";
 import Button from "@components/auth/Button";
 import TokenConfirm from "@components/auth/TokenConfirm";
 import Error from "@components/Error";
+//import Bs from "@components/bs";
+import dynamic from "next/dynamic";
+
+const Bs = dynamic(() => import("@components/bs"), {
+  ssr: false,
+  suspense: true,
+});
 
 type RegisterMethod = "login" | "signup";
 
@@ -35,7 +42,7 @@ interface LoginMutation {
 const Enter: NextPage = () => {
   const router = useRouter();
   const [okToken, setOkToken] = useState(false);
-  const [method, setMethod] = useState<RegisterMethod>("login");
+  const [method, setMethod] = useState<RegisterMethod>("signup");
   const {
     register,
     handleSubmit,
@@ -73,7 +80,7 @@ const Enter: NextPage = () => {
     if (loginError) {
       setError("error", { message: loginError });
     }
-  }, [enterError, loginError]);
+  }, [enterError, loginError, setError]);
 
   useEffect(() => {
     if (enterData && enterData.ok) {
@@ -165,6 +172,9 @@ const Enter: NextPage = () => {
 
           {method === "login" && (
             <>
+              <Suspense fallback="Loading">
+                <Bs />
+              </Suspense>
               <div className="w-[80%] overflow-hidden rounded-md ">
                 <Input
                   placeholder="Username"

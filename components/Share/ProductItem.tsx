@@ -64,7 +64,17 @@ const ProductItem: React.FC<ProductItemProps> = ({
             onClick={() => onProfile(user?.id)}
             className="flex cursor-pointer items-center "
           >
-            <div className="mr-1 h-5 w-5 rounded-full bg-slate-500 "></div>
+            <div className="relative -z-50 mr-1 h-5 w-5 rounded-full bg-slate-500 ">
+              {user?.avatar ? (
+                <Image
+                  src={deliveryFile(user?.avatar)}
+                  layout="fill"
+                  objectFit="cover"
+                  alt="avatar"
+                  className="rounded-full"
+                />
+              ) : null}
+            </div>
             <span className="font-bold text-gray-500 transition-all hover:text-gray-800">
               {user?.username}
             </span>
@@ -88,7 +98,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
               clipRule="evenodd"
             />
           </svg>
-          <span>Likes</span>
+          <span>{`${_count?.favs} Likes`}</span>
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { cls } from "@libs/client/cls";
 import useUser from "@libs/client/useUser";
+import Head from "next/head";
 import { NextRouter, useRouter } from "next/router";
 import React, { ReactNode, useCallback, useEffect, useState } from "react";
 
@@ -9,6 +10,7 @@ interface LayoutProps {
   back?: boolean;
   home?: boolean;
   showing?: boolean;
+  seoTitle?: string;
 }
 
 const navItem = ["Home", "우리동네", "채팅", "Live", "Profile"];
@@ -40,6 +42,7 @@ const Layout = ({
   back,
   showing = true,
   home = true,
+  seoTitle,
 }: LayoutProps) => {
   const [windowSize, setWindowSize] = useState(0);
   const router = useRouter();
@@ -75,6 +78,9 @@ const Layout = ({
 
   return (
     <section>
+      <Head>
+        <title>{seoTitle} | Market</title>
+      </Head>
       {showing ? (
         <nav className="fixed w-full">
           <div className="flex items-center justify-between p-4 px-2 dark:bg-gray-900 dark:text-white">
